@@ -1,0 +1,14 @@
+{
+    "name": "Core",
+    "alias": "core",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Ant\\Core\\Providers\\CoreServiceProvider",
+        "Ant\\Core\\Providers\\AssetManagerServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

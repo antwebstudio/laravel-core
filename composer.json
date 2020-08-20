@@ -1,0 +1,27 @@
+{
+    "name": "antweb/laravel-core",
+    "description": "",
+    "authors": [
+        {
+            "name": "Hui Yang",
+            "email": "chy1988@antwebstudio.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ant\\Core\\Providers\\CoreServiceProvider",
+				"Ant\\Core\\Providers\\AssetManagerServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Ant\\Core\\": "",
+			"Ant\\State\\": "State"
+        }
+    }
+}
