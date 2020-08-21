@@ -8,6 +8,7 @@
 
 namespace Ant\Core\Providers;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Ant\Core\Components\AssetManager;
@@ -25,7 +26,7 @@ class AssetManagerServiceProvider extends ServiceProvider
             module_path('Core', 'Config/asset-manager.php') => config_path('asset-manager.php'),
         ], 'config');*/
 		
-        Blade::directive('assets', function ($expression) {
+        Blade::directive('assetsbundle', function ($expression) {
             $expression = $this->parseExpression($expression);
 
             return "<?php echo app('asset-manager')->assetsBundle($expression) ?>";
@@ -42,6 +43,12 @@ class AssetManagerServiceProvider extends ServiceProvider
 
             return "<?php echo app('asset-manager')->js($expression) ?>";
         });
+
+        Blade::directive('endjs', function ($expression) {
+            $expression = $this->parseExpression($expression);
+
+            return "<?php echo app('asset-manager')->endjs() ?>";
+        });
     }
 
     /**
@@ -51,7 +58,7 @@ class AssetManagerServiceProvider extends ServiceProvider
      */
     protected function parseExpression($expression)
     {
-        if (starts_with($expression, '(')) {
+        if (Str::startsWith($expression, '(')) {
             $expression = substr($expression, 1, -1);
         }
 

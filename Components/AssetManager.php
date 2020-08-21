@@ -8,9 +8,12 @@
 
 namespace Ant\Core\Components;
 
+use Illuminate\Support\Str;
+
 class AssetManager
 {
     private $assets;
+    private $js = [];
 
     /**
      * AssetManager constructor.
@@ -26,13 +29,39 @@ class AssetManager
 		return $this->renderCss($name).$this->renderJs($name);
 	}
 	
-	public function css($css) {
-		$this->assets['current-page']['css'][] = $css;
+	public function css($css = null) {
+        if (isset($css)) {
+            $this->assets['current-page']['css'][] = $css;
+        } else {
+            $this->startCss();
+        }
 	}
 	
-	public function js($js) {
-		$this->assets['current-page']['js'][] = $js;
-	}
+	public function js($js = null) {
+        if (isset($js)) {
+            $this->assets['current-page']['js'][] = $js;
+        } else {
+            $this->startJs();
+        }
+    }
+
+    public function endJs() {
+        $content = ob_get_clean();
+        $key = $this->generateKey($content);
+        $this->js[$key] = $content;
+    }
+
+    protected function generateKey($content) {
+        return md5($content);
+    }
+    
+    protected function startCss() {
+
+    }
+    
+    protected function startJs() {
+        ob_start();
+    }
 
     protected function renderCss(...$libs)
     {
@@ -51,6 +80,12 @@ class AssetManager
             $html .= $this->makeJsLib($lib);
         }
 
+        $html .= '<script>';
+        foreach ($this->js as $key => $script) {
+            $html .= $script;
+        }
+        $html .= '</script>';
+
         return $html;
     }
 
@@ -63,7 +98,7 @@ class AssetManager
     {
         $html = '';
 
-        if (ends_with($lib, '.css')) {
+        if (Str::endsWith($lib, '.css')) {
             return $this->generateCssLink($lib);
         }
 
@@ -90,7 +125,7 @@ class AssetManager
      */
     protected function makeJsLib($lib)
     {
-        if (ends_with($lib, '.js')) {
+        if (Str::endsWith($lib, '.js')) {
             return $this->generateJsLink($lib);
         }
 
@@ -153,7 +188,7 @@ class AssetManager
 
     protected function generateAbsoluteUrl($url)
     {
-        if (starts_with($url, ['http://', 'https://', '//'])) {
+        if (Str::startsWith($url, ['http://', 'https://', '//'])) {
             return $url;
         }
 
