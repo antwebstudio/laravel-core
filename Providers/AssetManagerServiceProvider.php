@@ -21,9 +21,9 @@ class AssetManagerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
+        /*$this->publishes([
             module_path('Core', 'Config/asset-manager.php') => config_path('asset-manager.php'),
-        ], 'config');
+        ], 'config');*/
 		
         Blade::directive('assets', function ($expression) {
             $expression = $this->parseExpression($expression);
@@ -67,8 +67,8 @@ class AssetManagerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $configPath = module_path('Core', 'Config/asset-manager.php');
-        $this->mergeConfigFrom($configPath, 'asset-manager');
+        /*$configPath = module_path('Core', 'Config/asset-manager.php');
+        $this->mergeConfigFrom($configPath, 'asset-manager');*/
 
         $this->app->singleton('asset-manager', function () {
             $assets = $this->app['config']->get('asset-manager.assets');

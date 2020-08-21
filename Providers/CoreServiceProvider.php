@@ -24,7 +24,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(module_path('Core', 'Database/Migrations'));
+        //$this->loadMigrationsFrom(module_path('Core', 'Database/Migrations'));
 		
 		Blade::directive('debug', function ($expression) {
 			return '<?php if(env("APP_DEBUG")): ?>';
@@ -64,12 +64,14 @@ class CoreServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
-		
-		\TCG\Voyager\Facades\Voyager::addFormField(MultipleInputField::class);
-		\TCG\Voyager\Facades\Voyager::addFormField(WidgetField::class);
-		\TCG\Voyager\Facades\Voyager::addFormField(StateField::class);
-		\TCG\Voyager\Facades\Voyager::addFormField(JsonField::class);
-		\TCG\Voyager\Facades\Voyager::addFormField(AddressField::class);
+        
+        if (class_exists((\TCG\Voyager\Facades\Voyager::class))) {
+            \TCG\Voyager\Facades\Voyager::addFormField(MultipleInputField::class);
+            \TCG\Voyager\Facades\Voyager::addFormField(WidgetField::class);
+            \TCG\Voyager\Facades\Voyager::addFormField(StateField::class);
+            \TCG\Voyager\Facades\Voyager::addFormField(JsonField::class);
+            \TCG\Voyager\Facades\Voyager::addFormField(AddressField::class);
+        }
 
     }
 
@@ -80,12 +82,12 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
+        /*$this->publishes([
             module_path('Core', 'Config/config.php') => config_path('core.php'),
         ], 'config');
         $this->mergeConfigFrom(
             module_path('Core', 'Config/config.php'), 'core'
-        );
+        );*/
     }
 
     /**
@@ -97,7 +99,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/core');
 
-        $sourcePath = module_path('Core', 'Resources/views');
+        /*$sourcePath = module_path('Core', 'Resources/views');
 
         $this->publishes([
             $sourcePath => $viewPath
@@ -105,7 +107,7 @@ class CoreServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
             return $path . '/modules/core';
-        }, \Config::get('view.paths')), [$sourcePath]), 'core');
+        }, \Config::get('view.paths')), [$sourcePath]), 'core');*/
     }
 
     /**
@@ -120,7 +122,7 @@ class CoreServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'core');
         } else {
-            $this->loadTranslationsFrom(module_path('Core', 'Resources/lang'), 'core');
+            //$this->loadTranslationsFrom(module_path('Core', 'Resources/lang'), 'core');
         }
     }
 
@@ -131,9 +133,9 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
+        /*if (! app()->environment('production') && $this->app->runningInConsole()) {
             app(Factory::class)->load(module_path('Core', 'Database/factories'));
-        }
+        }*/
     }
 
     /**
